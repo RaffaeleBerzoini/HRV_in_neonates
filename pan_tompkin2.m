@@ -1,6 +1,6 @@
 function qrs_i_raw=pan_tompkin2(ecg, R_peak)
 
-qrs_i_raw = [R_peak(1)];
+qrs_i_raw = [R_peak(1)]; %initializing vector
 
 for i = 2:length(R_peak) %patient 3: remove last element for cycle(i.e.: i = 2:length(R_peak)-1)
     dist = R_peak(i) - R_peak(i-1);
