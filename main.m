@@ -3,7 +3,7 @@ clear; clc; close all;
 
 load DATA.mat;
 f_sample = 500;
-p_1 = LPT_ALLDATA.Ecg{4,1}
+p_1 = LPT_ALLDATA.Ecg{4,1};
 % p_1 = p_1(fix(0.75*length(p_1):length(p_1)));  % Se pan tompkins non
 % funzia suddividi l'ecg a tratti
 
