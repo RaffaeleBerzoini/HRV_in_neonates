@@ -1,4 +1,7 @@
-function qrs_i_raw=pan_tompkin2(ecg, R_peak)
+% function qrs_i_raw=pan_tompkin2(ecg, R_peak)
+function [qrs_amp_raw,qrs_i_raw,delay]=pan_tompkin_mod(ecg,fs,gr)
+
+[qrs_amp_raw,R_peak,delay] = pan_tompkin(ecg,fs,gr);
 
 qrs_i_raw = []; %initializing vector
 
