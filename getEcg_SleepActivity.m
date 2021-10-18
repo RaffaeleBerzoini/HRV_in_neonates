@@ -7,7 +7,7 @@ function [ecg, active_quiet] = getEcg_SleepActivity(subject_number)
 %INPUT
 %   patient_number: number of the row containing subject data
 
-load DATA.mat;
+load DATA2.mat;
 ecg = LPT_ALLDATA.Ecg{subject_number,1};
 active_quiet = LPT_ALLDATA.SS_baseline{subject_number,1};
 
