@@ -1,12 +1,13 @@
 %% Clear workspace
 clear; clc; close all;
 %% load subject data
-subject_number = 4; %Insert a number from 1 to 5
+subject_number = 5; %Insert a number from 1 to 5
 min_height = [4000, 3900, 6200, 1000, 740];
 
 [ecg, active_quiet_state] = getEcg_SleepActivity(subject_number);
 f_s = 500;
-t = 0:1/f_s:(length(ecg)/f_s)-(1/f_s);
+T = (length(ecg)/f_s)-(1/f_s);
+t = 0:1/f_s:T;
 %% spectrum
 spectrum = abs(fft(ecg - mean(ecg) ,4096));
 
@@ -48,8 +49,9 @@ xlabel('time [s]');
 linkaxes(sb,'x'); %to use the same axes for the subplots
 
 %% Tachogram
- 
-[x, y] = tachogram(time_intervals(r_peaks_fp, f_s));
+RRintervals = time_intervals(r_peaks_fp, f_s);
+
+[x, y] = tachogram(RRintervals);
 figure(35);
 plot(x,y); title('ECG Tachogram'),xlabel('Beats'),ylabel('Time [s]');
 
@@ -63,6 +65,7 @@ histogram(y,ceil((max(y)-min(y))/(1/f_s))); title('ECG Histogram of RR peaks'),x
 figure(37);
 plot(y(1:end-1),y(2:end),'.'); title('ECG Scattergram'),xlabel('(R-R)_{i}'),ylabel('(R-R)_{i+1}')
 
-
+%% Time Domain Analysis
+[avgHR,avgHRV,diff, RMSSD, SDNN] = time_domain_analysis(f_s, T, r_peaks_pt, RRintervals);
 
 
