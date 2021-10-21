@@ -47,7 +47,22 @@ sb(2) = subplot(2,1,2); plot(t, ecg); hold on; plot((r_peaks_fp)/f_s, ecg(r_peak
 xlabel('time [s]'); 
 linkaxes(sb,'x'); %to use the same axes for the subplots
 
+%% Tachogram
  
 [x, y] = tachogram(time_intervals(r_peaks_fp, f_s));
 figure(35);
-plot(x,y);
+plot(x,y); title('ECG Tachogram'),xlabel('Beats'),ylabel('Time [s]');
+
+%% Histogram
+
+figure(36);
+histogram(y,ceil((max(y)-min(y))/(1/f_s))); title('ECG Histogram of RR peaks'),xlabel('Duration [s]'),ylabel('Occurrence');
+
+%% Scattergram
+
+figure(37);
+plot(y(1:end-1),y(2:end),'.'); title('ECG Scattergram'),xlabel('(R-R)_{i}'),ylabel('(R-R)_{i+1}')
+
+
+
+
