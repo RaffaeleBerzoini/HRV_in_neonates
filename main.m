@@ -46,3 +46,8 @@ sb(1) = subplot(2,1,1); plot(t, ecg); hold on; plot((r_peaks_pt)/f_s, ecg(r_peak
 sb(2) = subplot(2,1,2); plot(t, ecg); hold on; plot((r_peaks_fp)/f_s, ecg(r_peaks_fp),'ok'); title('Find Peaks', 'Interpreter', 'none'); ylabel('Amplitude [mV]');
 xlabel('time [s]'); 
 linkaxes(sb,'x'); %to use the same axes for the subplots
+
+ 
+[x, y] = tachogram(time_intervals(r_peaks_fp, f_s));
+figure(35);
+plot(x,y);
