@@ -1,7 +1,7 @@
 %% Clear workspace
 clear; clc; close all;
 %% load subject data
-subject_number = 5; %Insert a number from 1 to 5
+subject_number = 4; %Insert a number from 1 to 5
 min_height = [4000, 3900, 6200, 1000, 740];
 
 [ecg, active_quiet_state] = getEcg_SleepActivity(subject_number);

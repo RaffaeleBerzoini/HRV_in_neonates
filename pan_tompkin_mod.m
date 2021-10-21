@@ -14,3 +14,5 @@ for i = 2:length(R_peak)-1 %patient 3: remove last element for cycle(i.e.: i = 2
     dist = fix(dist/3);
     qrs_i_raw = [qrs_i_raw, find(ecg(R_peak(i)-dist:R_peak(i)+dist)==max(ecg(R_peak(i)-dist:R_peak(i)+dist)))+R_peak(i)-dist-1];
 end
+
+end
