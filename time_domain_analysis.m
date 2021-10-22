@@ -27,7 +27,8 @@ function [avgHR, avgHRV, diff, RMSSD, SDNN]= time_domain_analysis(f_s, T, r_peak
     RMSSD = sqrt(avg_sq_intervals); % s
 
     %% Calculating SDNN
-    SDNN1 = std(RRintervals, 1); % s    
+    SDNN = std(RRintervals, 1); % s  
+    
     %% Results
     fprintf('Time domain analysis in the following patients has given the following results: \n Average heart rate (avgHR): \t %.2f bpm \n Average heart rate variance (avgHRV): \t %.2f ms \n Difference between longest and shortest RR interval: \t %.2f ms \n Root Mean Square of the Successive Differences (RMSSD): \t %.2f ms \n Standard Deviation (SDNN): \t %.2f ms \n', avgHR, avgHRV*1000, diff*1000, RMSSD*1000, SDNN*1000);
 
