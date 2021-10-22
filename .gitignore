@@ -1,8 +1,10 @@
 *.docx
 *.pptx
 *.pdf
+!/papers/*.pdf
 *.txt
 *.asv
 *.jpg
 *.png
 *.bmp
+
