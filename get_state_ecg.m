@@ -1,4 +1,4 @@
-function [state_ecg] = get_state_ecg(ecg, active_quiet_state)
+function [state_ecg] = get_state_ecg(ecg, active_quiet_state, fs)
 %[state_ecg] = get_state_ecg(ecg, active_quiet_state)
 %   Return a cell with
 %   -row 1: active/quiet state in string format
@@ -14,7 +14,7 @@ for i = 1:length(active_quiet_state)/3
         state_ecg{1,i} = 'active';
     end
     state_ecg{2,i} = [active_quiet_state((i-1)*3+1); active_quiet_state((i-1)*3+2)];
-    state_ecg{3,i} = ecg(active_quiet_state((i-1)*3+1)+1:active_quiet_state((i-1)*3+2)+1);
+    state_ecg{3,i} = ecg(active_quiet_state((i-1)*3+1)*fs+1:active_quiet_state((i-1)*3+2)*fs+1);
     
 end
 

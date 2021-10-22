@@ -3,11 +3,12 @@ clear; clc; close all;
 %% load subject data
 subject_number = 4; %Insert a number from 1 to 5
 min_height = [4000, 3900, 6200, 1000, 740];
+f_s = 500;
 
 [ecg, active_quiet_state] = getEcg_SleepActivity(subject_number);
-state_ecg = get_state_ecg(ecg, active_quiet_state); 
+state_ecg = get_state_ecg(ecg, active_quiet_state, f_s); 
 
-f_s = 500;
+
 t0 = 0; %estrarre t0 da state_ecg row2
 T = (length(ecg)/f_s)-(1/f_s); %estrarre T da state_ecg row2
 t = t0:1/f_s:T; 
