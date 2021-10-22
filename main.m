@@ -34,7 +34,7 @@ figure(2); freqz(b,a,1024,f_s);
 spectrum = abs(fft(ecg - mean(ecg) ,4096));
 
 f = linspace(0,f_s,length(spectrum));
-figure(3); plot(f, spectrum)
+figure(3); plot(f, spectrum);
 
 %% R-peaks detection
 
@@ -67,7 +67,10 @@ histogram(y,ceil((max(y)-min(y))/(1/f_s))); title('ECG Histogram of RR peaks'),x
 %% Scattergram
 
 figure(8);
-plot(y(1:end-1),y(2:end),'.'); title('ECG Scattergram'),xlabel('(R-R)_{i}'),ylabel('(R-R)_{i+1}')
+plot(y(1:end-1),y(2:end),'.'); title('ECG Scattergram'),xlabel('(R-R)_{i}'),ylabel('(R-R)_{i+1}');
 
 %% Time Domain Analysis
-[avgHR,avgHRV,diff, RMSSD, SDNN] = time_domain_analysis(f_s, T, r_peaks_pt, RRintervals);
+[avgHR, avgHRV, diff, RMSSD, SDNN] = time_domain_analysis(f_s, T, r_peaks_pt, RRintervals);
+
+%% Frequency domain analysis
+[LF2HF_welch, LF2HF_YW] = freq_domain_analysis(RRintervals, r_peaks_fp, f, f_s);
