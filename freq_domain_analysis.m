@@ -2,7 +2,7 @@ function [LF2HF_welch, LF2HF_YW]=freq_domain_analysis(RRintervals, r_peaks_pt, f
 
 %% Pre-processing
 % removing the mean value
-% RRintervals=RRintervals-mean(RRintervals);
+RRintervals=RRintervals-mean(RRintervals);
 
 % detrend
 RRintervals = detrend(RRintervals);
@@ -11,6 +11,13 @@ RRintervals = detrend(RRintervals);
 f_rs = 2;
 RRintervals_rs = interp1(r_peaks_pt(1:end-1)/fs, RRintervals, (r_peaks_pt/fs:1/f_rs:r_peaks_pt(end-1)/fs-1/f_rs));
 
+%% Check stationarity
+
+[h,pValue] = adftest(RRintervals_rs);
+if h==1
+    fprintf('The signal is stochastic! \n')
+
+% valutare se mettere una if o un errore
 %% Power spectrum density
 % Non-Parametric PSD
 window = 60;    %60 samples=30 sec
@@ -41,6 +48,9 @@ HF_YW = trapz(PSD_YW(f_HF));
 
 LF2HF_welch = LF_welch/HF_welch;
 LF2HF_YW = LF_YW/HF_YW;
+
+fprintf('Welch --> Low frequency power spectrum density: %f; High frequency power spectrum density: %f \n', LF_welch, HF_welch)
+fprintf('YW --> Low frequency power spectrum density: %f; High frequency power spectrum density: %f', LF_YW, HF_YW)
 
 %% plots
 
