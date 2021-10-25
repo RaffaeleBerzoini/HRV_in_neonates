@@ -14,8 +14,9 @@ RRintervals_rs = interp1(r_peaks_pt(1:end-1)/fs, RRintervals, (r_peaks_pt/fs:1/f
 %% Check stationarity
 
 [h,pValue] = adftest(RRintervals_rs);
-if h==1
-    fprintf('\nThe signal is stochastic. \n\n')
+disp(pValue)
+if h==1 && pValue < 0.05
+    fprintf('\nThe signal is stationary. \n\n')
 end
 % valutare se mettere una if o un errore
 %% Power spectrum density
