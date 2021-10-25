@@ -1,7 +1,7 @@
 %% Clear workspace
 clear; clc; close all;
 %% load subject data
-subject_number = 4; % selection of the patient (from 1 to 5)
+subject_number = 5; % selection of the patient (from 1 to 5)
 
 min_height = [4000, 3900, 6200, 1000, 740]; % valori soglia per ognuno dei pazienti
 f_s = 500;
@@ -77,9 +77,10 @@ for i=1:size(state_ecg,2)
 
     % Histogram
 
-    figure(6); % mettere a posto histogram: prendere il minimo e massimo generale dei segnali
-    subplot(1,size(state_ecg,2),i); histogram(y,ceil((max(y)-min(y))/(1/f_s))); title(strcat(s,' -',' ECG Histogram of RR peaks')),xlabel('Duration [s]'),ylabel('Occurrence');
-
+    figure(6);
+    % subplot(1,size(state_ecg,2),i); histogram(y,ceil((max(y)-min(y))/(1/f_s))); title(strcat(s,' -',' ECG Histogram of RR peaks')),xlabel('Duration [s]'),ylabel('Occurrence');
+    subplot(1,size(state_ecg,2),i); histogram(y,(0.35:(1/f_s):0.8)); title(strcat(s,' -',' ECG Histogram of RR peaks')),xlabel('Duration [s]'),ylabel('Occurrence');
+    
     % Scattergram
 
     figure(7);
