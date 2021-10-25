@@ -16,7 +16,7 @@ for i=1:size(state_ecg,2)
     ecg = state_ecg{3,i};
     T = state_ecg{2, i}(2)-state_ecg{2, i}(1); %estrarre T da state_ecg row2
     t = t0:1/f_s:T; 
-    
+   
     % Plot of ECG
     
     figure(1);
@@ -56,20 +56,21 @@ for i=1:size(state_ecg,2)
         [qrs_amp_raw,r_peaks_flip,delay, ~, ~] = r_peaks_detection(ecg_flipped,f_s,0,0);
         r_peaks_pt = [r_peaks_pt(1:find(r_peaks_pt(:)==222200)-1), abs(r_peaks_flip(1:find(r_peaks_flip(:)==94141))-length(ecg))]; 
     end
+
+    r_peaks = RR_correction(r_peaks_pt, r_peaks_fp, f_s, subject_number, i);
     
     if i>1
         close 9;
     end
     
     figure(4);
-    sb(1) = subplot(2,size(state_ecg,2),i); plot(t, ecg); hold on; plot((r_peaks_pt)/f_s, ecg(r_peaks_pt),'ok'); title(strcat(s,' -',' Pan-Tompkins Mod'), 'Interpreter', 'none'); ylabel('Amplitude [mV]');
-    sb(2) = subplot(2,size(state_ecg,2),i+size(state_ecg,2)); plot(t, ecg); hold on; plot((r_peaks_fp)/f_s, ecg(r_peaks_fp),'ok'); title(strcat(s,' -',' Find Peaks'), 'Interpreter', 'none'); ylabel('Amplitude [mV]');
-    xlabel('Time [s]'); 
-    linkaxes(sb,'x'); %to use the same axes for the subplots
+    subplot(size(state_ecg,2),1,i);
+    plot(t, ecg); hold on; plot((r_peaks)/f_s, ecg(r_peaks),'ok'); title(strcat(s,' -',' R-peaks extraction'), 'Interpreter', 'none'); ylabel('Amplitude [mV]'); xlabel('Time [s]'); 
+    
 
     % Tachogram
     
-    RRintervals = time_intervals(r_peaks_fp, f_s);
+    RRintervals = time_intervals(r_peaks, f_s);
 
     [x, y] = tachogram(RRintervals);
     figure(5);
@@ -87,8 +88,8 @@ for i=1:size(state_ecg,2)
     subplot(1,size(state_ecg,2),i); plot(y(1:end-1),y(2:end),'.'); title(strcat(s,' -',' ECG Scattergram')),xlabel('(R-R)_{i}'),ylabel('(R-R)_{i+1}');
 
     % Time Domain Analysis
-    [avgHR, avgHRV, diff, RMSSD, SDNN] = time_domain_analysis(f_s, T, r_peaks_pt, RRintervals);
+    [avgHR, avgHRV, diff, RMSSD, SDNN] = time_domain_analysis(f_s, T, r_peaks, RRintervals);
 
     % Frequency domain analysis
-    [LF2HF_welch, LF2HF_YW] = freq_domain_analysis(RRintervals, r_peaks_fp, f, f_s, size(state_ecg,2), i, s);
+    [LF2HF_welch, LF2HF_YW] = freq_domain_analysis(RRintervals, r_peaks, f, f_s, size(state_ecg,2), i, s);
 end
