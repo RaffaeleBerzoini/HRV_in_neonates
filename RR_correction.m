@@ -25,4 +25,5 @@ function clean_RR = RR_correction(peaks_pt, peaks_fp, fs, subject_number, i)
             clean_RR(index) = []; 
         end
     end
+    clean_RR = unique(clean_RR);
 end

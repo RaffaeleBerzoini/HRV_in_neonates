@@ -1,7 +1,7 @@
 %% Clear workspace
 clear; clc; close all;
 %% load subject data
-subject_number = 5; % selection of the patient (from 1 to 5)
+subject_number = 2; % selection of the patient (from 1 to 5)
 
 min_height = [4000, 3900, 6200, 1000, 740]; % valori soglia per ognuno dei pazienti
 f_s = 500;
@@ -11,8 +11,11 @@ state_ecg = get_state_ecg(ecg, active_quiet_state, f_s);
 t0 = 0; %estrarre t0 da state_ecg row2
 
 %% Active vs quiet comparison
+fprintf("Subject number: %d", subject_number);
+
 for i=1:size(state_ecg,2)
     s = state_ecg{1,i};
+    fprintf("\n\nState: %s\n", s);
     ecg = state_ecg{3,i};
     T = state_ecg{2, i}(2)-state_ecg{2, i}(1); %estrarre T da state_ecg row2
     t = t0:1/f_s:T; 
