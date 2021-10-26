@@ -1,10 +1,13 @@
 %% Clear workspace
 clear; clc; close all;
 %% load subject data
+
 subject_number = 5; % selection of the patient (from 1 to 5)
 % ATTENZIONE: per ora quando si avvia il programma bisogna runnarlo per la
 % prima volta con il paziente 1
+
 min_height = [4000, 3900, 6200, 1000, 740]; % threshold values for each patient
+
 f_s = 500;
 
 [ecg, active_quiet_state] = getEcg_SleepActivity(subject_number);
@@ -12,12 +15,15 @@ state_ecg = get_state_ecg(ecg, active_quiet_state, f_s);
 t0 = 0; %estrarre t0 da state_ecg row2
 
 %% Active vs quiet comparison
+fprintf("Subject number: %d", subject_number);
+
 for i=1:size(state_ecg,2)
     s = state_ecg{1,i};
+    fprintf("\n\nState: %s\n", s);
     ecg = state_ecg{3,i};
     T = state_ecg{2, i}(2)-state_ecg{2, i}(1); %estrarre T da state_ecg row2
     t = t0:1/f_s:T; 
-    
+   
     % Plot of ECG
     
     figure(1);
@@ -57,20 +63,21 @@ for i=1:size(state_ecg,2)
         [qrs_amp_raw,r_peaks_flip,delay, ~, ~] = r_peaks_detection(ecg_flipped,f_s,0,0);
         r_peaks_pt = [r_peaks_pt(1:find(r_peaks_pt(:)==222200)-1), abs(r_peaks_flip(1:find(r_peaks_flip(:)==94141))-length(ecg))]; 
     end
+
+    r_peaks = RR_correction(r_peaks_pt, r_peaks_fp, f_s, subject_number, i);
     
     if i>1
         close 9;
     end
     
     figure(4);
-    sb(1) = subplot(2,size(state_ecg,2),i); plot(t, ecg); hold on; plot((r_peaks_pt)/f_s, ecg(r_peaks_pt),'ok'); title(strcat(s,' -',' Pan-Tompkins Mod'), 'Interpreter', 'none'); ylabel('Amplitude [mV]');
-    sb(2) = subplot(2,size(state_ecg,2),i+size(state_ecg,2)); plot(t, ecg); hold on; plot((r_peaks_fp)/f_s, ecg(r_peaks_fp),'ok'); title(strcat(s,' -',' Find Peaks'), 'Interpreter', 'none'); ylabel('Amplitude [mV]');
-    xlabel('Time [s]'); 
-    linkaxes(sb,'x'); %to use the same axes for the subplots
+    subplot(size(state_ecg,2),1,i);
+    plot(t, ecg); hold on; plot((r_peaks)/f_s, ecg(r_peaks),'ok'); title(strcat(s,' -',' R-peaks extraction'), 'Interpreter', 'none'); ylabel('Amplitude [mV]'); xlabel('Time [s]'); 
+    
 
     % Tachogram
     
-    RRintervals = time_intervals(r_peaks_fp, f_s);
+    RRintervals = time_intervals(r_peaks, f_s);
 
     [x, y] = tachogram(RRintervals);
     figure(5);
@@ -88,6 +95,7 @@ for i=1:size(state_ecg,2)
     subplot(1,size(state_ecg,2),i); plot(y(1:end-1),y(2:end),'.'); title(strcat(s,' -',' ECG Scattergram')),xlabel('(R-R)_{i}'),ylabel('(R-R)_{i+1}');
 
     % Time Domain Analysis and saving parameters in csv file
+    
     [avgHR, avgHRV, diff, RMSSD, SDNN] = time_domain_analysis(f_s, T, r_peaks_pt, RRintervals);
 
     if state_ecg{1,i}(1) == 'a'
@@ -105,7 +113,8 @@ for i=1:size(state_ecg,2)
     end
     
     % Frequency domain analysis and saving parameters in csv file
-    [LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW] = freq_domain_analysis(RRintervals, r_peaks_fp, f, f_s, size(state_ecg,2), i, s);
+    
+    [LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW] = freq_domain_analysis(RRintervals, r_peaks, f, f_s, size(state_ecg,2), i, s);
     
     if i==1 && subject_number == 1
         Titles_frequency = array2table([state,LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW]);
