@@ -2,11 +2,11 @@
 clear; clc; close all;
 %% load subject data
 
-subject_number = 5; % selection of the patient (from 1 to 5)
+subject_number = 2; % selection of the patient (from 1 to 5)
 % ATTENZIONE: per ora quando si avvia il programma bisogna runnarlo per la
 % prima volta con il paziente 1
 
-save = true; %true to save parameters
+save = false; %true to save parameters
 
 min_height = [4000, 3900, 6200, 1000, 740]; % threshold values for each patient
 
@@ -30,7 +30,7 @@ for i=1:size(state_ecg,2)
     
     figure(1);
     subplot(size(state_ecg,2),1,i); plot(t,ecg); title(strcat(s,' -',' ECG'), 'Interpreter', 'none'); xlabel('Time [s]'); ylabel('Amplitude [mV]');
-    
+    linkaxes;
     % spectrum
 
     spectrum = abs(fft(ecg - mean(ecg),4096));
@@ -48,6 +48,7 @@ for i=1:size(state_ecg,2)
     
     figure(2);
     freqz(b,a,1024,f_s); title('Bode Diagrams of the used filter');
+    linkaxes
 
     spectrum = abs(fft(ecg - mean(ecg) ,4096));
 
@@ -55,7 +56,8 @@ for i=1:size(state_ecg,2)
     
     figure(3);
     subplot(1,size(state_ecg,2),i); plot(f,spectrum); title(strcat(s,' -',' Filtered Spectrum'), 'Interpreter', 'none'); xlabel('Frequency [Hz]'); ylabel('|X(f)|');
-
+    linkaxes
+    
     % R-peaks detection
 
     [~,r_peaks_pt,~, ~, r_peaks_fp] = r_peaks_detection(ecg, f_s, 0, min_height(subject_number));
@@ -75,7 +77,7 @@ for i=1:size(state_ecg,2)
     figure(4);
     subplot(size(state_ecg,2),1,i);
     plot(t, ecg); hold on; plot((r_peaks)/f_s, ecg(r_peaks),'ok'); title(strcat(s,' -',' R-peaks extraction'), 'Interpreter', 'none'); ylabel('Amplitude [mV]'); xlabel('Time [s]'); 
-    
+    linkaxes;
 
     % Tachogram
     
@@ -84,18 +86,18 @@ for i=1:size(state_ecg,2)
     [x, y] = tachogram(RRintervals);
     figure(5);
     subplot(size(state_ecg,2),1,i); plot(x,y); title(strcat(s,' -',' ECG Tachogram')),xlabel('Beats'),ylabel('Time [s]');
-
+    linkaxes;
     % Histogram
 
     figure(6);
     % subplot(1,size(state_ecg,2),i); histogram(y,ceil((max(y)-min(y))/(1/f_s))); title(strcat(s,' -',' ECG Histogram of RR peaks')),xlabel('Duration [s]'),ylabel('Occurrence');
     subplot(1,size(state_ecg,2),i); histogram(y,(0.35:(1/f_s):0.8)); title(strcat(s,' -',' ECG Histogram of RR peaks')),xlabel('Duration [s]'),ylabel('Occurrence');
-    
+    linkaxes;
     % Scattergram
 
     figure(7);
     subplot(1,size(state_ecg,2),i); plot(y(1:end-1),y(2:end),'.'); title(strcat(s,' -',' ECG Scattergram')),xlabel('(R-R)_{i}'),ylabel('(R-R)_{i+1}');
-
+    linkaxes;
     % Time Domain Analysis and saving parameters in csv file
     
     [avgHR, avgHRV, diff, RMSSD, SDNN] = time_domain_analysis(f_s, T, r_peaks, RRintervals);

@@ -55,8 +55,6 @@ fprintf('YW Analysis:\n Low frequency power spectrum density: \t %f; \n High fre
 %% plots
 
 figure(8);
-%subplot(1,3,1); plot(r_peaks_pt(1:end-1)/fs,RRintervals);
-%title('RR_ECG','Interpreter','none'); xlabel('Time [s]'); ylabel('Duration [ms]'); ylim([-150 150]);
 
 subplot(2,size,i); plot(f,PSD_welch);
 title(strcat(s,' - PSD_Welch RR_ECG'),'Interpreter','none'); xlabel('Frequency [Hz]'); ylabel('PSD Welch Method [ms^2/Hz]');
@@ -65,6 +63,6 @@ str = ['LF/HF=',num2str(LF2HF_welch)]; text(0.6,0.8*max(PSD_welch),str,'Horizont
 subplot(2,size,i+size); plot(f,PSD_YW);
 title(strcat(s,' - PSD_YW RR_ECG'),'Interpreter','none'); xlabel('Frequency [Hz]'); ylabel('PSD Yule-Walker Method [ms^2/Hz]');
 str = ['LF/HF=',num2str(LF2HF_YW)]; text(0.6,0.8*max(PSD_YW),str,'HorizontalAlignment','left');
-
+linkaxes;
 
 end
