@@ -1,4 +1,4 @@
-function [LF2HF_welch, LF2HF_YW]=freq_domain_analysis(RRintervals, r_peaks_pt, f, fs, size, i, s) % o r_peaks_fp
+function [LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW]=freq_domain_analysis(RRintervals, r_peaks_pt, f, fs, size, i, s) % o r_peaks_fp
 
 %% Pre-processing
 % removing the mean value

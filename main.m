@@ -2,8 +2,9 @@
 clear; clc; close all;
 %% load subject data
 subject_number = 5; % selection of the patient (from 1 to 5)
-
-min_height = [4000, 3900, 6200, 1000, 740]; % valori soglia per ognuno dei pazienti
+% ATTENZIONE: per ora quando si avvia il programma bisogna runnarlo per la
+% prima volta con il paziente 1
+min_height = [4000, 3900, 6200, 1000, 740]; % threshold values for each patient
 f_s = 500;
 
 [ecg, active_quiet_state] = getEcg_SleepActivity(subject_number);
@@ -86,9 +87,32 @@ for i=1:size(state_ecg,2)
     figure(7);
     subplot(1,size(state_ecg,2),i); plot(y(1:end-1),y(2:end),'.'); title(strcat(s,' -',' ECG Scattergram')),xlabel('(R-R)_{i}'),ylabel('(R-R)_{i+1}');
 
-    % Time Domain Analysis
+    % Time Domain Analysis and saving parameters in csv file
     [avgHR, avgHRV, diff, RMSSD, SDNN] = time_domain_analysis(f_s, T, r_peaks_pt, RRintervals);
 
-    % Frequency domain analysis
-    [LF2HF_welch, LF2HF_YW] = freq_domain_analysis(RRintervals, r_peaks_fp, f, f_s, size(state_ecg,2), i, s);
+    if state_ecg{1,i}(1) == 'a'
+        state = 1;
+    else
+        state = 0;
+    end
+    
+    if i==1 && subject_number == 1
+        Titles_time = array2table([state,avgHR, avgHRV, diff, RMSSD, SDNN]);
+        Titles_time.Properties.VariableNames(1:6) = {'Active','avgHR','avgHRV','diff','RMSSD','SDNN'};
+        writetable(Titles_time,'time_parameters.csv');
+    else 
+        dlmwrite('time_parameters.csv',[state,avgHR, avgHRV, diff, RMSSD, SDNN],'-append');
+    end
+    
+    % Frequency domain analysis and saving parameters in csv file
+    [LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW] = freq_domain_analysis(RRintervals, r_peaks_fp, f, f_s, size(state_ecg,2), i, s);
+    
+    if i==1 && subject_number == 1
+        Titles_frequency = array2table([state,LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW]);
+        Titles_frequency.Properties.VariableNames(1:7) = {'Active','LF_welch','HF_welch','LF_YW','HF_YW','LF2HF_welch','LF2HF_YW'};
+        writetable(Titles_frequency,'frequency_parameters.csv'); 
+    else
+        dlmwrite('frequency_parameters.csv',[state,LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW],'-append');
+    end
+    
 end

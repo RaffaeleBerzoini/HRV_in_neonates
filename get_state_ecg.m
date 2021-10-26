@@ -9,9 +9,9 @@ state_ecg = {};
 active_quiet_state = active_quiet_state{1,1};
 for i = 1:length(active_quiet_state)/3
     if active_quiet_state(i*3) == 1
-        state_ecg{1,i} = 'quiet';
+        state_ecg{1,i} = 'quite'; % 0 == quite
     else
-        state_ecg{1,i} = 'active';
+        state_ecg{1,i} = 'active'; % 1 == active
     end
     state_ecg{2,i} = [active_quiet_state((i-1)*3+1); active_quiet_state((i-1)*3+2)];
     state_ecg{3,i} = ecg(active_quiet_state((i-1)*3+1)*fs+1:active_quiet_state((i-1)*3+2)*fs+1);
