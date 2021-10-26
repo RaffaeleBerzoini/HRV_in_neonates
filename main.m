@@ -6,6 +6,8 @@ subject_number = 5; % selection of the patient (from 1 to 5)
 % ATTENZIONE: per ora quando si avvia il programma bisogna runnarlo per la
 % prima volta con il paziente 1
 
+save = true; %true to save parameters
+
 min_height = [4000, 3900, 6200, 1000, 740]; % threshold values for each patient
 
 f_s = 500;
@@ -96,32 +98,36 @@ for i=1:size(state_ecg,2)
 
     % Time Domain Analysis and saving parameters in csv file
     
-    [avgHR, avgHRV, diff, RMSSD, SDNN] = time_domain_analysis(f_s, T, r_peaks_pt, RRintervals);
+    [avgHR, avgHRV, diff, RMSSD, SDNN] = time_domain_analysis(f_s, T, r_peaks, RRintervals);
 
-    if state_ecg{1,i}(1) == 'a'
-        state = 1;
-    else
-        state = 0;
-    end
-    
-    if i==1 && subject_number == 1
-        Titles_time = array2table([state,avgHR, avgHRV, diff, RMSSD, SDNN]);
-        Titles_time.Properties.VariableNames(1:6) = {'Active','avgHR','avgHRV','diff','RMSSD','SDNN'};
-        writetable(Titles_time,'time_parameters.csv');
-    else 
-        dlmwrite('time_parameters.csv',[state,avgHR, avgHRV, diff, RMSSD, SDNN],'-append');
+    if save == true
+        if state_ecg{1,i}(1) == 'a'
+            state = 1;
+        else
+            state = 0;
+        end
+        
+        if i==1 && subject_number == 1
+            Titles_time = array2table([state,avgHR, avgHRV, diff, RMSSD, SDNN]);
+            Titles_time.Properties.VariableNames(1:6) = {'Active','avgHR','avgHRV','diff','RMSSD','SDNN'};
+            writetable(Titles_time,'time_parameters.csv');
+        else 
+            dlmwrite('time_parameters.csv',[state,avgHR, avgHRV, diff, RMSSD, SDNN],'-append');
+        end
     end
     
     % Frequency domain analysis and saving parameters in csv file
     
     [LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW] = freq_domain_analysis(RRintervals, r_peaks, f, f_s, size(state_ecg,2), i, s);
     
-    if i==1 && subject_number == 1
-        Titles_frequency = array2table([state,LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW]);
-        Titles_frequency.Properties.VariableNames(1:7) = {'Active','LF_welch','HF_welch','LF_YW','HF_YW','LF2HF_welch','LF2HF_YW'};
-        writetable(Titles_frequency,'frequency_parameters.csv'); 
-    else
-        dlmwrite('frequency_parameters.csv',[state,LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW],'-append');
+    if save == true
+        if i==1 && subject_number == 1
+            Titles_frequency = array2table([state,LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW]);
+            Titles_frequency.Properties.VariableNames(1:7) = {'Active','LF_welch','HF_welch','LF_YW','HF_YW','LF2HF_welch','LF2HF_YW'};
+            writetable(Titles_frequency,'frequency_parameters.csv'); 
+        else
+            dlmwrite('frequency_parameters.csv',[state,LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW],'-append');
+        end
     end
     
 end
