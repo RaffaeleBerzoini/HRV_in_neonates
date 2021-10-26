@@ -2,7 +2,7 @@
 clear; clc; close all;
 %% load subject data
 
-subject_number = 2; % selection of the patient (from 1 to 5)
+subject_number = 1; % selection of the patient (from 1 to 5)
 % ATTENZIONE: per ora quando si avvia il programma bisogna runnarlo per la
 % prima volta con il paziente 1
 
@@ -18,6 +18,8 @@ t0 = 0; %estrarre t0 da state_ecg row2
 
 %% Active vs quiet comparison
 fprintf("Subject number: %d", subject_number);
+
+PSDs = [];
 
 for i=1:size(state_ecg,2)
     s = state_ecg{1,i};
@@ -120,8 +122,10 @@ for i=1:size(state_ecg,2)
     
     % Frequency domain analysis and saving parameters in csv file
     
-    [LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW] = freq_domain_analysis(RRintervals, r_peaks, f, f_s, size(state_ecg,2), i, s);
+    [LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, PSD] = freq_domain_analysis(RRintervals, r_peaks, f, f_s, size(state_ecg,2), i, s);
     
+    PSDs = [PSDs, PSD];
+
     if save == true
         if i==1 && subject_number == 1
             Titles_frequency = array2table([state,LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW]);
@@ -133,3 +137,21 @@ for i=1:size(state_ecg,2)
     end
     
 end
+
+up_limit = min([length(PSDs(:,1)), length(PSDs(:,2))]);
+x = PSDs(:,1);
+y = PSDs(:,2);
+[Cxy,F] = mscohere(x(1:up_limit), y(1:up_limit),hamming(100),80,100,f_s);
+[Pxy,F] = cpsd(x(1:up_limit), y(1:up_limit),hamming(100),80,100,f_s);
+
+Pxy(Cxy < 0.2) = 0;
+
+figure;
+plot(F,abs(Pxy));
+xlim([0, 2.5]);
+title('Cross Spectrum Phase')
+xlabel('Frequency (Hz)')
+ylabel('Lag (\times\pi rad)')
+grid
+
+
