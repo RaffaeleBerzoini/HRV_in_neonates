@@ -6,7 +6,7 @@ subject_number = 5; % selection of the patient (from 1 to 5)
 % ATTENZIONE: per ora quando si avvia il programma bisogna runnarlo per la
 % prima volta con il paziente 1
 
-save = true; % true to save parameters
+save = true; %true to save parameters
 
 min_height = [4000, 3900, 6200, 1000, 740]; % threshold values for each patient
 
@@ -112,11 +112,11 @@ for i=1:size(state_ecg,2)
         end
         
         if i==1 && subject_number == 1
-            Titles_time = array2table([state,avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, SampEn]);
-            Titles_time.Properties.VariableNames(1:8) = {'Active','avgHR','avgHRV','diff','RMSSD','SDNN', 'ApEn', 'SampEn'};
+            Titles_time = array2table([state,avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, SampEn, subject_number]);
+            Titles_time.Properties.VariableNames(1:9) = {'Active','avgHR','avgHRV','diff','RMSSD','SDNN', 'ApEn', 'SampEn', 'subject_number'};
             writetable(Titles_time,'time_parameters.csv');
         else 
-            dlmwrite('time_parameters.csv',[state,avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, SampEn],'-append');
+            dlmwrite('time_parameters.csv',[state,avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, SampEn, subject_number],'-append');
         end
     end
     
@@ -124,34 +124,34 @@ for i=1:size(state_ecg,2)
     
     [LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, PSD, VLF_welch_pc, LF_welch_pc, HF_welch_pc, VLF_YW_pc, LF_YW_pc, HF_YW_pc] = freq_domain_analysis(RRintervals, r_peaks, f, f_s, size(state_ecg,2), i, s);
     
-    PSDs = [PSDs, PSD];
+    PSDs = [PSDs, PSD]; %#ok<AGROW> 
 
     if save == true
         if i==1 && subject_number == 1
-            Titles_frequency = array2table([state,LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, VLF_welch_pc, LF_welch_pc, HF_welch_pc, VLF_YW_pc, LF_YW_pc, HF_YW_pc]);
-            Titles_frequency.Properties.VariableNames(1:13) = {'Active','LF_welch','HF_welch','LF_YW','HF_YW','LF2HF_welch','LF2HF_YW', 'VLF_welch_pc', 'LF_welch_pc', 'HF_welch_pc', 'VLF_YW_pc', 'LF_YW_pc', 'HF_YW_pc'};
+            Titles_frequency = array2table([state,LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, VLF_welch_pc, LF_welch_pc, HF_welch_pc, VLF_YW_pc, LF_YW_pc, HF_YW_pc, subject_number]);
+            Titles_frequency.Properties.VariableNames(1:14) = {'Active','LF_welch','HF_welch','LF_YW','HF_YW','LF2HF_welch','LF2HF_YW', 'VLF_welch_pc', 'LF_welch_pc', 'HF_welch_pc', 'VLF_YW_pc', 'LF_YW_pc', 'HF_YW_pc', 'subject_number'};
             writetable(Titles_frequency,'frequency_parameters.csv'); 
         else
-            dlmwrite('frequency_parameters.csv',[state,LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, VLF_welch_pc, LF_welch_pc, HF_welch_pc, VLF_YW_pc, LF_YW_pc, HF_YW_pc],'-append');
+            dlmwrite('frequency_parameters.csv',[state,LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, VLF_welch_pc, LF_welch_pc, HF_welch_pc, VLF_YW_pc, LF_YW_pc, HF_YW_pc, subject_number],'-append');
         end
     end
     
 end
 
-up_limit = min([length(PSDs(:,1)), length(PSDs(:,2))]);
-x = PSDs(:,1);
-y = PSDs(:,2);
-[Cxy,F] = mscohere(x(1:up_limit), y(1:up_limit),hamming(100),80,100,f_s);
-[Pxy,F] = cpsd(x(1:up_limit), y(1:up_limit),hamming(100),80,100,f_s);
-
-Pxy(Cxy < 0.2) = 0;
-
-figure;
-plot(F,abs(Pxy));
-xlim([0, 2.5]);
-title('Cross Spectrum Phase')
-xlabel('Frequency (Hz)')
-ylabel('Lag (\times\pi rad)')
-grid
+% up_limit = min([length(PSDs(:,1)), length(PSDs(:,2))]);
+% x = PSDs(:,1);
+% y = PSDs(:,2);
+% [Cxy,F] = mscohere(x(1:up_limit), y(1:up_limit),hamming(100),80,100,f_s);
+% [Pxy,F] = cpsd(x(1:up_limit), y(1:up_limit),hamming(100),80,100,f_s);
+% 
+% Pxy(Cxy < 0.2) = 0;
+% 
+% figure;
+% plot(F,abs(Pxy));
+% xlim([0, 2.5]);
+% title('Cross Spectrum Phase')
+% xlabel('Frequency (Hz)')
+% ylabel('Lag (\times\pi rad)')
+% grid
 
 
