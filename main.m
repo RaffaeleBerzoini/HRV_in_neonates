@@ -102,7 +102,7 @@ for i=1:size(state_ecg,2)
     linkaxes;
     % Time Domain Analysis and saving parameters in csv file
     
-    [avgHR, avgHRV, diff, RMSSD, SDNN, ApEn] = time_domain_analysis(f_s, T, r_peaks, RRintervals);
+    [avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, SampEn] = time_domain_analysis(f_s, T, r_peaks, RRintervals);
 
     if save == true
         if state_ecg{1,i}(1) == 'a'
@@ -112,11 +112,11 @@ for i=1:size(state_ecg,2)
         end
         
         if i==1 && subject_number == 1
-            Titles_time = array2table([state,avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, subject_number]);
-            Titles_time.Properties.VariableNames(1:8) = {'Active','avgHR','avgHRV','diff','RMSSD','SDNN', 'ApEn', 'subject_number'};
+            Titles_time = array2table([state,avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, SampEn, subject_number]);
+            Titles_time.Properties.VariableNames(1:9) = {'Active','avgHR','avgHRV','diff','RMSSD','SDNN', 'ApEn', 'SampEn', 'subject_number'};
             writetable(Titles_time,'time_parameters.csv');
         else 
-            dlmwrite('time_parameters.csv',[state,avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, subject_number],'-append');
+            dlmwrite('time_parameters.csv',[state,avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, SampEn, subject_number],'-append');
         end
     end
     
