@@ -22,7 +22,7 @@ end
 %% Power spectrum density
 % Non-Parametric PSD
 window = 60;
-overlap = 30;  
+overlap = window/2;  %overlap 50%
 nfft = 1024;
 [PSD_welch,f_w] = pwelch(RRintervals_rs, hamming(window), overlap, nfft, f_rs);
 

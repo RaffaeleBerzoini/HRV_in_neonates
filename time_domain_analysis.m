@@ -32,7 +32,7 @@ function [avgHR, avgHRV, diff, RMSSD, SDNN, ApEn,SampEn]= time_domain_analysis(f
     %% calculating ApEn
 
     ApEn = approximateEntropy(RRintervals);
-    SampEn = sampen(RRintervals,2,0.2)
+    SampEn = sampen(RRintervals,2,0.2);
     %% Results
     fprintf('\nTime domain analysis in the following patients has given the following results: \n Average heart rate (avgHR): \t %.2f bpm \n Average heart rate variance (avgHRV): \t %.2f ms \n Difference between longest and shortest RR interval: \t %.2f ms \n Root Mean Square of the Successive Differences (RMSSD): \t %.2f ms \n Standard Deviation (SDNN): \t %.2f ms \n Approximate entropy: \t %.2f \n Sample Entropy: \t %.2f', avgHR, avgHRV*1000, diff*1000, RMSSD*1000, SDNN*1000, ApEn, SampEn);
 
