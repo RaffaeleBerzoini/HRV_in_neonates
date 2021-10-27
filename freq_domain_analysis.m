@@ -1,4 +1,5 @@
-function [LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, PSD_welch]=freq_domain_analysis(RRintervals, r_peaks, f_w, fs, size, i, s) % o r_peaks_fp
+function [LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, PSD_welch, VLF_welch_pc, LF_welch_pc, HF_welch_pc, VLF_YW_pc, LF_YW_pc, HF_YW_pc]=freq_domain_analysis(RRintervals, r_peaks, f, fs, size, i, s) % o r_peaks_fp
+
 
 %% Pre-processing
 % removing the mean value
@@ -10,7 +11,7 @@ RRintervals = detrend(RRintervals);
 % resampling
 f_rs = 6;
 RRintervals_rs = interp1(r_peaks(1:end-1)/fs, RRintervals, (r_peaks/fs:1/f_rs:r_peaks(end-1)/fs-1/f_rs));
-
+% RRintervals_rs = spline(r_peaks(1:end-1)/fs, RRintervals, (r_peaks/fs:1/f_rs:r_peaks(end-1)/fs-1/f_rs));
 %% Check stationarity
 
 [h,pValue] = adftest(RRintervals_rs);
@@ -49,6 +50,14 @@ f_HF = and(ge(f_y,HF(1)),le(f_y,HF(2)));
 VLF_YW = trapz(PSD_YW(f_VLF));
 LF_YW = trapz(PSD_YW(f_LF));
 HF_YW = trapz(PSD_YW(f_HF));
+
+VLF_welch_pc = trapz(PSD_welch(f_VLF))/trapz(PSD_welch);
+LF_welch_pc = trapz(PSD_welch(f_LF))/trapz(PSD_welch);
+HF_welch_pc = trapz(PSD_welch(f_HF))/trapz(PSD_welch);
+
+VLF_YW_pc = trapz(PSD_YW(f_VLF))/trapz(PSD_YW);
+LF_YW_pc = trapz(PSD_YW(f_LF))/trapz(PSD_YW);
+HF_YW_pc = trapz(PSD_YW(f_HF))/trapz(PSD_YW);
 
 LF2HF_welch = LF_welch/HF_welch;
 LF2HF_YW = LF_YW/HF_YW;

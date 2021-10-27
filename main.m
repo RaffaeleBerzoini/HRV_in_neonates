@@ -14,7 +14,7 @@ f_s = 500;
 
 [ecg, active_quiet_state] = getEcg_SleepActivity(subject_number);
 state_ecg = get_state_ecg(ecg, active_quiet_state, f_s); 
-t0 = 0; %estrarre t0 da state_ecg row2
+t0 = 0; % estrarre t0 da state_ecg row2
 
 %% Active vs quiet comparison
 fprintf("Subject number: %d", subject_number);
@@ -102,7 +102,7 @@ for i=1:size(state_ecg,2)
     linkaxes;
     % Time Domain Analysis and saving parameters in csv file
     
-    [avgHR, avgHRV, diff, RMSSD, SDNN] = time_domain_analysis(f_s, T, r_peaks, RRintervals);
+    [avgHR, avgHRV, diff, RMSSD, SDNN, ApEn] = time_domain_analysis(f_s, T, r_peaks, RRintervals);
 
     if save == true
         if state_ecg{1,i}(1) == 'a'
@@ -112,27 +112,27 @@ for i=1:size(state_ecg,2)
         end
         
         if i==1 && subject_number == 1
-            Titles_time = array2table([state,avgHR, avgHRV, diff, RMSSD, SDNN, subject_number]);
-            Titles_time.Properties.VariableNames(1:7) = {'Active','avgHR','avgHRV','diff','RMSSD','SDNN','subject_number'};
+            Titles_time = array2table([state,avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, subject_number]);
+            Titles_time.Properties.VariableNames(1:8) = {'Active','avgHR','avgHRV','diff','RMSSD','SDNN', 'ApEn', 'subject_number'};
             writetable(Titles_time,'time_parameters.csv');
         else 
-            dlmwrite('time_parameters.csv',[state,avgHR, avgHRV, diff, RMSSD, SDNN, subject_number],'-append');
+            dlmwrite('time_parameters.csv',[state,avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, subject_number],'-append');
         end
     end
     
     % Frequency domain analysis and saving parameters in csv file
     
-    [LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, PSD] = freq_domain_analysis(RRintervals, r_peaks, f, f_s, size(state_ecg,2), i, s);
+    [LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, PSD, VLF_welch_pc, LF_welch_pc, HF_welch_pc, VLF_YW_pc, LF_YW_pc, HF_YW_pc] = freq_domain_analysis(RRintervals, r_peaks, f, f_s, size(state_ecg,2), i, s);
     
-    PSDs = [PSDs, PSD];
+    PSDs = [PSDs, PSD]; %#ok<AGROW> 
 
     if save == true
         if i==1 && subject_number == 1
-            Titles_frequency = array2table([state,LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, subject_number]);
-            Titles_frequency.Properties.VariableNames(1:8) = {'Active','LF_welch','HF_welch','LF_YW','HF_YW','LF2HF_welch','LF2HF_YW', 'subject_number'};
+            Titles_frequency = array2table([state,LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, VLF_welch_pc, LF_welch_pc, HF_welch_pc, VLF_YW_pc, LF_YW_pc, HF_YW_pc, subject_number]);
+            Titles_frequency.Properties.VariableNames(1:14) = {'Active','LF_welch','HF_welch','LF_YW','HF_YW','LF2HF_welch','LF2HF_YW', 'VLF_welch_pc', 'LF_welch_pc', 'HF_welch_pc', 'VLF_YW_pc', 'LF_YW_pc', 'HF_YW_pc', 'subject_number'};
             writetable(Titles_frequency,'frequency_parameters.csv'); 
         else
-            dlmwrite('frequency_parameters.csv',[state,LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, subject_number],'-append');
+            dlmwrite('frequency_parameters.csv',[state,LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, VLF_welch_pc, LF_welch_pc, HF_welch_pc, VLF_YW_pc, LF_YW_pc, HF_YW_pc, subject_number],'-append');
         end
     end
     
