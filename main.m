@@ -20,7 +20,7 @@ t0 = 0; % estrarre t0 da state_ecg row2
 fprintf("Subject number: %d", subject_number);
 
 PSDs = [];
-
+RR_intervals = {};
 for i=1:size(state_ecg,2)
     s = state_ecg{1,i};
     fprintf("\n\nState: %s\n", s);
@@ -135,8 +135,13 @@ for i=1:size(state_ecg,2)
             dlmwrite('frequency_parameters.csv',[state,LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, VLF_welch_pc, LF_welch_pc, HF_welch_pc, VLF_YW_pc, LF_YW_pc, HF_YW_pc, subject_number],'-append');
         end
     end
+
+    RR_intervals{1,i}=RRintervals;
     
 end
+
+% figure;
+% boxplot([RR_intervals{1,1}(1:286), RR_intervals{1,2}(1:286)], {state_ecg{1,1}, state_ecg{1,2}});
 
 % up_limit = min([length(PSDs(:,1)), length(PSDs(:,2))]);
 % x = PSDs(:,1);
