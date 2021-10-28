@@ -1,14 +1,11 @@
-%%
-clc; close all; clear;
+function main_time_stat_analysis(file_appendix)
 
-%%
+    params = readtable(strcat('time_parameters', file_appendix));
+    active = params{:,"Active"}==1;
+    quiet = params{:, "Active"}==0;
+    variables = params.Properties.VariableNames;
 
-params = readtable('time_parameters-1-2-3-4-5.xls');
-active = params{:,"Active"}==1;
-quiet = params{:, "Active"}==0;
-variables = params.Properties.VariableNames;
-
-filename = 'time_analysis.xls';
+filename = strcat('time_analysis', file_appendix, '.xls');
 if exist(filename, 'file')==2
   delete(filename);
 end
@@ -24,15 +21,9 @@ row = 3;
 for i = 2:size(params, 2)-1
     quiet_vals = [mean(params{quiet, i}), std(params{quiet, i}), median(params{quiet, i}), iqr(params{quiet, i})];
     active_vals = [mean(params{active, i}), std(params{active, i}), median(params{active, i}), iqr(params{active, i})];
-    [p, h] = ranksum(params{quiet, i},params{active, i});
-    writematrix([p], filename, Range=strcat('L', int2str(row)));
+    [p, ~] = ranksum(params{quiet, i},params{active, i});
+    writematrix([p], filename, Range=strcat('L', int2str(row))); %#ok<NBRAK> 
     writematrix(quiet_vals, filename, Range=strcat('B', int2str(row)));
     writematrix(active_vals, filename, Range=strcat('G', int2str(row)));
     row = row + 1;
 end
-
-
-%
-
-%[p,h] = ranksum(x,y) % h == 1 reject the null hypothesis that data in x and y are samples from continuous distributions with equal medians
-

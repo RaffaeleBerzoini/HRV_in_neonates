@@ -146,3 +146,23 @@ for subject = subjects
     end
 end
 
+response = questdlg('Would you like to perform the statistical analysis?', ...
+	'Statistical Analysis', ...
+	'Yes', 'No', 'Yes');
+
+if strcmp(response, 'Yes')
+    response = questdlg('Would you like to perform the statistical analysis?', ...
+	'Statistical Analysis', ...
+	'Both', 'Time-domain only', 'Frequency-domain only', 'Both');
+    if strcmp(response, 'Frequency-domain only')
+        main_freq_stat_analysis(filename_appendix);
+    elseif strcmp(response, 'Time-domain only')
+        main_time_stat_analysis(filename_appendix);
+    else
+        main_freq_stat_analysis(filename_appendix);
+        main_time_stat_analysis(filename_appendix);
+    end
+end
+
+
+
