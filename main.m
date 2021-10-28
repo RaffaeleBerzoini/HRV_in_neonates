@@ -1,16 +1,25 @@
 %% Clear workspace
 clear; clc; close all;
-%% load subject data
 
-subject_number = 5; % selection of the patient (from 1 to 5)
-% ATTENZIONE: per ora quando si avvia il programma bisogna runnarlo per la
-% prima volta con il paziente 1
+%% choose subject to analyze
 
-save = true; %true to save parameters
+selected = 0;
+request = 0;
+while ~selected && request < 2
+    list = {'1','2','3','4','5'};
+    [subjects,selected] = listdlg('ListString', list, 'ListSize', [120, 90], 'PromptString', "Subject Selection");
+    request = request + 1;
+end
 
-min_height = [4000, 3900, 6200, 1000, 740]; % threshold values for each patient
+if ~selected
+    error('You have to select at least one subject to procede');
+end
+%% 
+subject_number = subjects(1);
 
-f_s = 500;
+save = false; %true to save parameters
+min_height = [4000, 3900, 6200, 1000, 740]; % threshold values for RR-peaks extraction
+f_s = 500; %sample frequency
 
 [ecg, active_quiet_state] = getEcg_SleepActivity(subject_number);
 state_ecg = get_state_ecg(ecg, active_quiet_state, f_s); 
@@ -19,8 +28,6 @@ t0 = 0; % estrarre t0 da state_ecg row2
 %% Active vs quiet comparison
 fprintf("Subject number: %d", subject_number);
 
-PSDs = [];
-RR_intervals = {};
 for i=1:size(state_ecg,2)
     s = state_ecg{1,i};
     fprintf("\n\nState: %s\n", s);
@@ -123,8 +130,6 @@ for i=1:size(state_ecg,2)
     % Frequency domain analysis and saving parameters in csv file
     
     [LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, PSD, VLF_welch_pc, LF_welch_pc, HF_welch_pc, VLF_YW_pc, LF_YW_pc, HF_YW_pc] = freq_domain_analysis(RRintervals, r_peaks, f, f_s, size(state_ecg,2), i, s);
-    
-    PSDs = [PSDs, PSD]; %#ok<AGROW> 
 
     if save == true
         if i==1 && subject_number == 1
@@ -135,28 +140,5 @@ for i=1:size(state_ecg,2)
             dlmwrite('frequency_parameters.csv',[state,LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, VLF_welch_pc, LF_welch_pc, HF_welch_pc, VLF_YW_pc, LF_YW_pc, HF_YW_pc, subject_number],'-append');
         end
     end
-
-    RR_intervals{1,i}=RRintervals;
     
 end
-
-% figure;
-% boxplot([RR_intervals{1,1}(1:286), RR_intervals{1,2}(1:286)], {state_ecg{1,1}, state_ecg{1,2}});
-
-% up_limit = min([length(PSDs(:,1)), length(PSDs(:,2))]);
-% x = PSDs(:,1);
-% y = PSDs(:,2);
-% [Cxy,F] = mscohere(x(1:up_limit), y(1:up_limit),hamming(100),80,100,f_s);
-% [Pxy,F] = cpsd(x(1:up_limit), y(1:up_limit),hamming(100),80,100,f_s);
-% 
-% Pxy(Cxy < 0.2) = 0;
-% 
-% figure;
-% plot(F,abs(Pxy));
-% xlim([0, 2.5]);
-% title('Cross Spectrum Phase')
-% xlabel('Frequency (Hz)')
-% ylabel('Lag (\times\pi rad)')
-% grid
-
-
