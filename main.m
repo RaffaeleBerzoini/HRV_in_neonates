@@ -17,7 +17,7 @@ end
 %% TMP SECTION
 
 % subject = subjects(1);
-save = true;
+save = false;
 
 %%
 min_height = [4000, 3900, 6200, 1000, 740]; % threshold values for RR-peaks extraction
@@ -115,6 +115,10 @@ for subject = subjects
         
         RRintervals = time_intervals(r_peaks, f_s);
     
+          if subject==3
+              [r_peaks, RRintervals] = RRint_correction(RRintervals, r_peaks);
+          end
+
         [x, y] = tachogram(RRintervals);
         figure(fig_nr + 5);
         subplot(size(state_ecg,2),1,i); plot(x,y); title(strcat(state,' -',' ECG Tachogram')),xlabel('Beats'),ylabel('Time [s]');
@@ -145,6 +149,10 @@ for subject = subjects
                
     end
 end
+
+figure;
+subplot(2,1,1)
+plot(t, ecg); hold on; plot((r_peaks)/f_s, ecg(r_peaks),'ok'); title(strcat(state,' -',' R-peaks extraction'), 'Interpreter', 'none'); ylabel('Amplitude [mV]'); xlabel('Time [s]');    
 
 response = questdlg('Would you like to perform the statistical analysis?', ...
 	'Statistical Analysis', ...
