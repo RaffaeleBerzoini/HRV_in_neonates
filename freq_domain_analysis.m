@@ -1,4 +1,4 @@
-function [LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, PSD_welch, VLF_welch_pc, LF_welch_pc, HF_welch_pc, VLF_YW_pc, LF_YW_pc, HF_YW_pc]=freq_domain_analysis(RRintervals, r_peaks, f, fs, size, i, s) % o r_peaks_fp
+function [LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, PSD_welch, VLF_welch_pc, LF_welch_pc, HF_welch_pc, VLF_YW_pc, LF_YW_pc, HF_YW_pc]=freq_domain_analysis(RRintervals, r_peaks, f, fs, size, i, s, fig_nr)
 
 
 %% Pre-processing
@@ -67,8 +67,7 @@ fprintf('YW Analysis:\n Low frequency power spectrum density: \t %f; \n High fre
 
 %% plots
 
-figure(8);
-%10*log10()
+figure(fig_nr + 8);
 subplot(2,size,i); plot(f_w,PSD_welch); hold on; xline(0.05); xline(0.2); xline(0.5);
 title(strcat(s,' - PSD_Welch RR_ECG'),'Interpreter','none'); xlabel('Frequency [Hz]'); ylabel('PSD Welch Method [ms^2/Hz]');
 str = ['LF/HF=',num2str(LF2HF_welch)]; text(0.6,0.8*max(PSD_welch),str,'HorizontalAlignment','left');

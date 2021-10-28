@@ -3,7 +3,7 @@ clc; close all; clear;
 
 %%
 
-params = readtable('time_parameters.csv');
+params = readtable('time_parameters-1-2-3-4-5.xls');
 active = params{:,"Active"}==1;
 quiet = params{:, "Active"}==0;
 variables = params.Properties.VariableNames;

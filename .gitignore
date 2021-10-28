@@ -7,4 +7,5 @@
 *.jpg
 *.png
 *.bmp
-
+*.xls
+!frequency_parameters_comparison.xls
