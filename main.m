@@ -1,7 +1,7 @@
 %% Clear workspace
 clear; clc; close all;
 
-%% choose subject to analyze
+%% choose subject(2) to analyze
 
 selected = 0;
 request = 0;
@@ -14,12 +14,7 @@ end
 if ~selected
     error('You have to select at least one subject to procede');
 end
-%% TMP SECTION
 
-% subject = subjects(1);
-save = false;
-
-%%
 min_height = [4000, 3900, 6200, 1000, 740]; % threshold values for RR-peaks extraction
 f_s = 500; %sample frequency
 
@@ -115,9 +110,9 @@ for subject = subjects
         
         RRintervals = time_intervals(r_peaks, f_s);
     
-          if subject==3
-              [r_peaks, RRintervals] = RRint_correction(RRintervals, r_peaks);
-          end
+        if subject==3
+            [r_peaks, RRintervals] = RRint_correction(RRintervals, r_peaks);
+        end
 
         [x, y] = tachogram(RRintervals);
         figure(fig_nr + 5);
@@ -149,10 +144,6 @@ for subject = subjects
                
     end
 end
-
-figure;
-subplot(2,1,1)
-plot(t, ecg); hold on; plot((r_peaks)/f_s, ecg(r_peaks),'ok'); title(strcat(state,' -',' R-peaks extraction'), 'Interpreter', 'none'); ylabel('Amplitude [mV]'); xlabel('Time [s]');    
 
 response = questdlg('Would you like to perform the statistical analysis?', ...
 	'Statistical Analysis', ...

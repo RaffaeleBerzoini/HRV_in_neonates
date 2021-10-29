@@ -27,7 +27,7 @@ function clean_RR = RR_correction(peaks_pt, peaks_fp, fs, subject_number, i)
     if removal{subject_number, i} ~= 'none'
         to_remove = removal{subject_number, i}; %in seconds
         for j = 1:length(to_remove)
-            index = find(clean_RR/fs == to_remove(j));
+            index = clean_RR/fs == to_remove(j);
             clean_RR(index) = []; 
         end
     end
@@ -35,7 +35,7 @@ function clean_RR = RR_correction(peaks_pt, peaks_fp, fs, subject_number, i)
     if addition{subject_number, i} ~= 'none'
         to_add = addition{subject_number, i}; %in seconds
         for j = 1:length(to_add)
-            clean_RR = [clean_RR; to_add(j)*fs]; 
+            clean_RR = [clean_RR; to_add(j)*fs]; %#ok<AGROW> 
         end
     end
     clean_RR = unique(clean_RR);

@@ -21,8 +21,11 @@ end
 % valutare se mettere una if o un errore
 %% Power spectrum density
 % Non-Parametric PSD
-window = 60;
-overlap = window/2;  %overlap 50%
+
+desired_resolution = 0.025;
+window = fix(1.3631*(f_rs/desired_resolution));
+
+overlap = fix(window/2);  %overlap 50%
 nfft = 1024;
 [PSD_welch,f_w] = pwelch(RRintervals_rs, hamming(window), overlap, nfft, f_rs);
 
