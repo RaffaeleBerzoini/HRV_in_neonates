@@ -1,4 +1,4 @@
-function [avgHR, avgHRV, diff, RMSSD, SDNN, ApEn,SampEn]= time_domain_analysis(f_s, T, r_peaks, RRintervals)
+function [avgHR, avgHRV, diff, RMSSD, SDNN, ApEn,SampEn]= time_domain_analysis(T, r_peaks, RRintervals)
     
     %% Difference between longest and shortest RR interval
     shortestRR = min(RRintervals);
@@ -19,7 +19,7 @@ function [avgHR, avgHRV, diff, RMSSD, SDNN, ApEn,SampEn]= time_domain_analysis(f
     %% Calculating RMSSD
     deltaRR = [];
     for i =1:length(RRintervals)-1
-        deltaRR = [deltaRR, RRintervals(i)-RRintervals(i+1)];
+        deltaRR = [deltaRR, RRintervals(i)-RRintervals(i+1)]; %#ok<AGROW> 
     end
 
     sq_intervals = deltaRR .^ 2;

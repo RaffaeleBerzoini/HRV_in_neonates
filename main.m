@@ -3,13 +3,8 @@ clear; clc; close all;
 
 %% choose subject(2) to analyze
 
-selected = 0;
-request = 0;
-while ~selected && request < 2
-    list = {'1','2','3','4','5'};
-    [subjects,selected] = listdlg('ListString', list, 'ListSize', [120, 90], 'PromptString', "Subject Selection");
-    request = request + 1;
-end
+list = {'1','2','3','4','5'};
+[subjects,selected] = listdlg('ListString', list, 'ListSize', [120, 90], 'PromptString', "Subject Selection");
 
 if ~selected
     error('You have to select at least one subject to procede');
@@ -17,6 +12,8 @@ end
 
 min_height = [4000, 3900, 6200, 1000, 740]; % threshold values for RR-peaks extraction
 f_s = 500; %sample frequency
+
+% variables for file creation
 
 filename_appendix = '';
 for subject = subjects
@@ -39,20 +36,21 @@ end
 writecell({'Active','avgHR','avgHRV','diff','RMSSD','SDNN', 'ApEn', 'SampEn', 'subject'}, time_par_filename, Range='A1');
 writecell({'Active','LF_welch','HF_welch','LF_YW','HF_YW','LF2HF_welch','LF2HF_YW', 'VLF_welch_pc', 'LF_welch_pc', 'HF_welch_pc', 'VLF_YW_pc', 'LF_YW_pc', 'HF_YW_pc', 'subject'}, freq_par_filename, Range='A1');
 
+% for loop to analyze all the selcted subjects
 for subject = subjects
     [ecg, active_quiet_state] = getEcg_SleepActivity(subject);
-    state_ecg = get_state_ecg(ecg, active_quiet_state, f_s); 
-    t0 = 0; 
+    state_ecg = get_state_ecg(ecg, active_quiet_state, f_s);  
+    t0 = 0; %Every time interval will start from t0 = 0 for better visual comparison 
 
     fprintf("Subject number: %d", subject);
 
     fig_nr = (subject)*10; % help variable to not overwrite previous subject figures
 
     for i=1:size(state_ecg,2)
-        state = state_ecg{1,i};
+        state = state_ecg{1,i}; % retrieve the sleep state of the subject
         fprintf("\n\nState: %s\n", state);
-        ecg = state_ecg{3,i};
-        T = state_ecg{2, i}(2)-state_ecg{2, i}(1); %estrarre T da state_ecg row2
+        ecg = state_ecg{3,i}; % retrieve the ecg signal
+        T = state_ecg{2, i}(2)-state_ecg{2, i}(1); % final time of the sleep state analyzed
         t = t0:1/f_s:T; 
        
         % Plot of ECG
@@ -60,12 +58,13 @@ for subject = subjects
         figure(fig_nr + 1);
         subplot(size(state_ecg,2),1,i); plot(t,ecg); title(strcat(state,' -',' ECG'), 'Interpreter', 'none'); xlabel('Time [s]'); ylabel('Amplitude [mV]');
         linkaxes;
+        
         % spectrum
     
         spectrum = abs(fft(ecg - mean(ecg),4096));
     
         f = linspace(0,f_s,length(spectrum));
-        w = f/f_s; %omega
+        w = f/f_s; % omega
         
         % filters application
     
@@ -78,11 +77,11 @@ for subject = subjects
         figure(fig_nr + 2);
         freqz(b,a,1024,f_s); title('Bode Diagrams of the used filter');
         linkaxes
-    
-        spectrum = abs(fft(ecg - mean(ecg) ,4096));
-    
-        f = linspace(0,f_s,length(spectrum));
         
+        % spectrum after filters application
+
+        spectrum = abs(fft(ecg - mean(ecg) ,4096)); 
+        f = linspace(0,f_s,length(spectrum));
         figure(fig_nr + 3);
         subplot(1,size(state_ecg,2),i); plot(f,spectrum); title(strcat(state,' -',' Filtered Spectrum'), 'Interpreter', 'none'); xlabel('Frequency [Hz]'); ylabel('|X(f)|');
         linkaxes
@@ -97,7 +96,7 @@ for subject = subjects
             r_peaks_pt = [r_peaks_pt(1:find(r_peaks_pt(:)==222200)-1), abs(r_peaks_flip(1:find(r_peaks_flip(:)==94141))-length(ecg))]; 
         end
     
-        r_peaks = RR_correction(r_peaks_pt, r_peaks_fp, f_s, subject, i);
+        r_peaks = R_peaks_correction(r_peaks_pt, r_peaks_fp, f_s, subject, i);
         
         close; %to close a spurious plot of pan_tompkins although putting gr=0;
         
@@ -109,30 +108,34 @@ for subject = subjects
         % Tachogram
         
         RRintervals = time_intervals(r_peaks, f_s);
-    
-
+        
+        % Ectopic beats correction
         if subject==3 || subject==4
-            [r_peaks, RRintervals] = RRint_correction(RRintervals, r_peaks);
+            threshold = 0.78;
+            [r_peaks, RRintervals] = RRinterval_correction(RRintervals, r_peaks, threshold);
         end
 
         [x, y] = tachogram(RRintervals);
+
         figure(fig_nr + 5);
         subplot(size(state_ecg,2),1,i); plot(x,y); title(strcat(state,' -',' ECG Tachogram')),xlabel('Beats'),ylabel('Time [s]');
         linkaxes;
+
         % Histogram
     
         figure(fig_nr + 6);
-        % subplot(1,size(state_ecg,2),i); histogram(y,ceil((max(y)-min(y))/(1/f_s))); title(strcat(s,' -',' ECG Histogram of RR peaks')),xlabel('Duration [s]'),ylabel('Occurrence');
         subplot(1,size(state_ecg,2),i); histogram(y,(0.35:(1/f_s):0.8)); title(strcat(state,' -',' ECG Histogram of RR peaks')),xlabel('Duration [s]'),ylabel('Occurrence');
         linkaxes;
+
         % Scattergram
     
         figure(fig_nr + 7);
         subplot(1,size(state_ecg,2),i); plot(y(1:end-1),y(2:end),'.'); title(strcat(state,' -',' ECG Scattergram')),xlabel('(R-R)_{i}'),ylabel('(R-R)_{i+1}');
         linkaxes;
+        
         % Time Domain Analysis and saving parameters in csv file
         
-        [avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, SampEn] = time_domain_analysis(f_s, T, r_peaks, RRintervals);
+        [avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, SampEn] = time_domain_analysis(T, r_peaks, RRintervals);
             % Saving time domain analysis parameters on file
         state_num = 1*(state(1) == 'a');
         writematrix([state_num,avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, SampEn, subject],time_par_filename,'WriteMode','append');       
