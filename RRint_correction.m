@@ -1,6 +1,6 @@
 function [RRsample, RRintervals] = RRint_correction(OLDintervals, OLDpeaks)
 
-a = OLDintervals>0.8
+a = OLDintervals>=0.78
 RRintervals = [];
 RRsample = [];
 for i=1:length(OLDintervals)
@@ -20,7 +20,5 @@ for i=1:length(OLDintervals)
 end
 
 RRsample = [RRsample, OLDpeaks(end)];
-a=size(RRsample)
-b=size(RRintervals)
 
 end

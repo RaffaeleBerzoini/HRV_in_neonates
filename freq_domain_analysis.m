@@ -10,8 +10,7 @@ RRintervals = detrend(RRintervals);
 
 % resampling
 f_rs = 6;
-RRintervals_rs = interp1(r_peaks(1:end-1)/fs, RRintervals, (r_peaks/fs:1/f_rs:r_peaks(end-1)/fs-1/f_rs));
-% RRintervals_rs = spline(r_peaks(1:end-1)/fs, RRintervals, (r_peaks/fs:1/f_rs:r_peaks(end-1)/fs-1/f_rs));
+RRintervals_rs = spline(r_peaks(1:end-1)/fs, RRintervals, (r_peaks/fs:1/f_rs:r_peaks(end-1)/fs-1/f_rs));
 %% Check stationarity
 
 [h,pValue] = adftest(RRintervals_rs);
@@ -21,8 +20,9 @@ end
 % valutare se mettere una if o un errore
 %% Power spectrum density
 % Non-Parametric PSD
-window = 60;
-overlap = window/2;  %overlap 50%
+desired_resolution = 0.025; %resolution = f_rs/sample
+window = fix(1.3631*(f_rs/desired_resolution));
+overlap = fix(window/2);  %overlap 50%
 nfft = 1024;
 [PSD_welch,f_w] = pwelch(RRintervals_rs, hamming(window), overlap, nfft, f_rs);
 
