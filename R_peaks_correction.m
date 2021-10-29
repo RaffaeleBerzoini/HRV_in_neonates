@@ -21,7 +21,7 @@ function clean_R_peaks = R_peaks_correction(peaks_pt, peaks_fp, fs, subject_numb
                    'none', 'none', 'none';
                     'none', 'none', 'none';
                     'none', [1.74; 1.838; 2.268; 2.332; 2.484; 2.528; 2.626; 7.7; 11.352; 84.61; 84.654; 85.186], 'none';
-                    [0.028], [160.31], 'none'};
+                    [0.028], [160.31], 'none'}; %#ok<NBRAK> 
    
     clean_R_peaks = peaks_fp;
 
