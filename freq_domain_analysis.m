@@ -10,8 +10,7 @@ RRintervals = detrend(RRintervals);
 
 % resampling
 f_rs = 6;
-RRintervals_rs = interp1(r_peaks(1:end-1)/fs, RRintervals, (r_peaks/fs:1/f_rs:r_peaks(end-1)/fs-1/f_rs));
-% RRintervals_rs = spline(r_peaks(1:end-1)/fs, RRintervals, (r_peaks/fs:1/f_rs:r_peaks(end-1)/fs-1/f_rs));
+RRintervals_rs = spline(r_peaks(1:end-1)/fs, RRintervals, (r_peaks/fs:1/f_rs:r_peaks(end-1)/fs-1/f_rs));
 %% Check stationarity
 
 [h,pValue] = adftest(RRintervals_rs);
@@ -22,7 +21,7 @@ end
 %% Power spectrum density
 % Non-Parametric PSD
 
-desired_resolution = 0.025;
+desired_resolution = 0.025; %resolution = f_rs/sample
 window = fix(1.3631*(f_rs/desired_resolution));
 
 overlap = fix(window/2);  %overlap 50%

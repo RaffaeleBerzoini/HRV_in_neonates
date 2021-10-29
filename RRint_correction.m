@@ -1,6 +1,7 @@
 function [Rsample, RRintervals] = RRint_correction(OLDintervals, OLDpeaks)
 
-a = OLDintervals>0.8;
+a = OLDintervals>=0.78
+
 RRintervals = [];
 Rsample = [];
 for i=1:length(OLDintervals)

@@ -110,7 +110,8 @@ for subject = subjects
         
         RRintervals = time_intervals(r_peaks, f_s);
     
-        if subject==3
+
+        if subject==3 || subject==4
             [r_peaks, RRintervals] = RRint_correction(RRintervals, r_peaks);
         end
 
