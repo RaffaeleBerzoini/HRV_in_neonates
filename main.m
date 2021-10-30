@@ -118,7 +118,7 @@ for subject = subjects
         [x, y] = tachogram(RRintervals);
 
         figure(fig_nr + 5);
-        subplot(size(state_ecg,2),1,i); plot(x,y); title(strcat(state,' -',' ECG Tachogram')),xlabel('Beats'),ylabel('Time [s]');
+        subplot(size(state_ecg,2),1,i); plot(x,y*1000); title(strcat(state,' -',' ECG Tachogram')),xlabel('Beats'),ylabel('Time [ms]');
         linkaxes;
 
         % Histogram
@@ -138,7 +138,7 @@ for subject = subjects
         [avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, SampEn] = time_domain_analysis(T, r_peaks, RRintervals);
             % Saving time domain analysis parameters on file
         state_num = 1*(strcmp(state, 'active')); 
-        writematrix([state_num,avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, SampEn, subject],time_par_filename,'WriteMode','append');       
+        writematrix([state_num,avgHR, avgHRV*1000, diff*1000, RMSSD*1000, SDNN*1000, ApEn, SampEn, subject],time_par_filename,'WriteMode','append');       
         
         % Frequency domain analysis and saving parameters in csv file
         

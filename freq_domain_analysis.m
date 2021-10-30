@@ -28,6 +28,8 @@ function [LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, PSD_welch, VL
 % fig_nr: figure number for plotting purposes
 %% Pre-processing
 % removing the mean value
+RRintervals = RRintervals*1000; % expressed in ms
+
 RRintervals=RRintervals-mean(RRintervals);
 
 % detrend
@@ -45,6 +47,7 @@ end
 
 %% Power spectrum density
 % Non-Parametric PSD
+
 
 desired_resolution = 0.025; % minimum resolution to detect the lower limit of the low frequencies: 0.05Hz
 hamming_resolution_factor = 1.3631; % Resolution reduction factor due to the Hamming window
