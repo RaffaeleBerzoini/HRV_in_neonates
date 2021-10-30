@@ -1,20 +1,33 @@
-function [avgHR, avgHRV, diff, RMSSD, SDNN, ApEn,SampEn]= time_domain_analysis(T, r_peaks, RRintervals)
-    
+function [avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, SampEn]= time_domain_analysis(T, r_peaks, RRintervals)
+    % time_domain_analysis performs multiple index analysis on the
+    % RR-intervals and R-peaks of a subject
+    %
+    % [avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, SampEn]= time_domain_analysis(T, r_peaks, RRintervals)
+    %
+    % avgHR: mean bpm over a period of time T
+    % avgHRV: mean distance between two R peaks
+    % diff: difference between longest and shortest RR interval
+    % RMSSD: root mean square of successive differences between normal heartbeats
+    % SDNN: the standard deviation of all of the RR intervals
+    % ApEn: approximate entropy
+    % SampEn: sample entropy
+
+
     %% Difference between longest and shortest RR interval
     shortestRR = min(RRintervals);
     longestRR = max(RRintervals);
-    diff = longestRR-shortestRR; % s
+    diff = longestRR-shortestRR; %seconds
 
     %% Calculating Average Heart Rate
     
     % Number of R-peaks
     num_R_peaks = length(r_peaks);
     
-    %beats per minute
+    % Beats per minute
     avgHR = (num_R_peaks*60)/T; % bpm
     
     %% Calculating Average HRV
-    avgHRV = mean(RRintervals); % s
+    avgHRV = mean(RRintervals); % seconds
     
     %% Calculating RMSSD
     deltaRR = [];
@@ -24,10 +37,10 @@ function [avgHR, avgHRV, diff, RMSSD, SDNN, ApEn,SampEn]= time_domain_analysis(T
 
     sq_intervals = deltaRR .^ 2;
     avg_sq_intervals = mean(sq_intervals);
-    RMSSD = sqrt(avg_sq_intervals); % s
+    RMSSD = sqrt(avg_sq_intervals); % seconds
 
     %% Calculating SDNN
-    SDNN = std(RRintervals, 1); % s  
+    SDNN = std(RRintervals, 1); % seconds
     
     %% calculating ApEn
 

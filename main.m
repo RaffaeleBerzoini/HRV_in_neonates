@@ -1,7 +1,7 @@
 %% Clear workspace
 clear; clc; close all;
 
-%% choose subject(2) to analyze
+%% choose subject(s) to analyze
 
 list = {'1','2','3','4','5'};
 [subjects,selected] = listdlg('ListString', list, 'ListSize', [120, 90], 'PromptString', "Subject Selection");
@@ -137,12 +137,12 @@ for subject = subjects
         
         [avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, SampEn] = time_domain_analysis(T, r_peaks, RRintervals);
             % Saving time domain analysis parameters on file
-        state_num = 1*(state(1) == 'a');
+        state_num = 1*(strcmp(state, 'active')); 
         writematrix([state_num,avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, SampEn, subject],time_par_filename,'WriteMode','append');       
         
         % Frequency domain analysis and saving parameters in csv file
         
-        [LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, PSD, VLF_welch_pc, LF_welch_pc, HF_welch_pc, VLF_YW_pc, LF_YW_pc, HF_YW_pc] = freq_domain_analysis(RRintervals, r_peaks, f, f_s, size(state_ecg,2), i, state, fig_nr);
+        [LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, PSD, VLF_welch_pc, LF_welch_pc, HF_welch_pc, VLF_YW_pc, LF_YW_pc, HF_YW_pc] = freq_domain_analysis(RRintervals, r_peaks, f_s, size(state_ecg,2), i, state, fig_nr);
             % Saving frequency domain analysis parameters on file
         writematrix([state_num,LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, VLF_welch_pc, LF_welch_pc, HF_welch_pc, VLF_YW_pc, LF_YW_pc, HF_YW_pc, subject],freq_par_filename,'WriteMode','append');
                
