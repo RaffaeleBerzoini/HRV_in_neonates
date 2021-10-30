@@ -11,6 +11,10 @@ function [avgHR, avgHRV, diff, RMSSD, SDNN, ApEn, SampEn]= time_domain_analysis(
     % SDNN: the standard deviation of all of the RR intervals
     % ApEn: approximate entropy
     % SampEn: sample entropy
+    %
+    % T: time interval length of the current sleep state
+    % r_peaks: vector containing the R peaks position, in samples
+    % RRintervals: vector containing the RR distances, in seconds
 
 
     %% Difference between longest and shortest RR interval

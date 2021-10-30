@@ -18,6 +18,14 @@ function [LF_welch, HF_welch, LF_YW, HF_YW, LF2HF_welch, LF2HF_YW, PSD_welch, VL
 % VLF_YW_pc: percentage of VLF over the total PSD with Yule-Walker method
 % LF_YW_pc: percentage of LF over the total PSD with Yule-Walker method
 % HF_YW_pc: percentage of HF over the total PSD with Yule-Walker method
+%
+% RRintervals: vector containing the RR distances, in seconds
+% r_peaks: vector containing the position of the R peaks, in samples
+% fs: ECG sample frequency 
+% size: how many sleep state are present in the current subject data
+% i: index for plotting purposes
+% state: string containing the sleep state fo the subject
+% fig_nr: figure number for plotting purposes
 %% Pre-processing
 % removing the mean value
 RRintervals=RRintervals-mean(RRintervals);
