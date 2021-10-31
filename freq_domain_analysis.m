@@ -104,8 +104,8 @@ HF_YW_pc = trapz(PSD_YW(f_HF))/trapz(PSD_YW);
 LF2HF_welch = LF_welch/HF_welch;
 LF2HF_YW = LF_YW/HF_YW;
 
-fprintf('Welch Analysis:\n Low frequency power spectrum density: \t %f;\n High frequency power spectrum density: \t %f \n', LF_welch, HF_welch)
-fprintf('YW Analysis:\n Low frequency power spectrum density: \t %f; \n High frequency power spectrum density: \t %f \n', LF_YW, HF_YW)
+fprintf('Welch Analysis:\n Low frequency power spectrum density: \t %f ms^2/Hz;\n High frequency power spectrum density: \t %f ms^2/Hz\n', LF_welch, HF_welch)
+fprintf('YW Analysis:\n Low frequency power spectrum density: \t %f ms^2/Hz; \n High frequency power spectrum density: \t %f ms^2/Hz\n', LF_YW, HF_YW)
 
 %% plots
 
