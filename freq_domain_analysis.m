@@ -86,7 +86,7 @@ f_HF = and(ge(f_y,HF(1)),le(f_y,HF(2)));
 
 % VLF, LF, HF power extraction from the Yule-Walker PSD
 
-VLF_YW = trapz(PSD_YW(f_VLF));
+VLF_YW = trapz(PSD_YW(f_VLF)); %#ok<*NASGU> 
 LF_YW = trapz(PSD_YW(f_LF));
 HF_YW = trapz(PSD_YW(f_HF));
 
@@ -110,11 +110,11 @@ fprintf('YW Analysis:\n Low frequency power spectrum density: \t %f; \n High fre
 %% plots
 
 figure(fig_nr + 8);
-subplot(2,size,i); semilogy(f_w,PSD_welch); hold on; xline(0.05); xline(0.2); xline(0.5);
+subplot(2,size,i); semilogy(f_w,PSD_welch); hold on; xline(0.05); xline(0.2); xline(0.5); xline(1.5);
 title(strcat(state,' - PSD_Welch RR_ECG'),'Interpreter','none'); xlabel('Frequency [Hz]'); ylabel('PSD Welch Method [ms^2/Hz]');
 str = ['LF/HF=',num2str(LF2HF_welch)]; text(0.6,0.8*max(PSD_welch),str,'HorizontalAlignment','left');
 
-subplot(2,size,i+size); semilogy(f_y,PSD_YW); hold on; xline(0.05); xline(0.2); xline(0.5);
+subplot(2,size,i+size); semilogy(f_y,PSD_YW); hold on; xline(0.05); xline(0.2); xline(0.5); xline(1.5);
 title(strcat(state,' - PSD_YW RR_ECG'),'Interpreter','none'); xlabel('Frequency [Hz]'); ylabel('PSD Yule-Walker Method [ms^2/Hz]');
 str = ['LF/HF=',num2str(LF2HF_YW)]; text(0.6,0.8*max(PSD_YW),str,'HorizontalAlignment','left');
 linkaxes;
