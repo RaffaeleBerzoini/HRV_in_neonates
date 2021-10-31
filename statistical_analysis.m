@@ -1,24 +1,34 @@
-function time_stat_analysis(file_appendix)
-    % time_stat_analysis performs statistical analysis on the time
+function statistical_analysis(domain, file_appendix)
+    % statistical_analysis performs statistical analysis on the
     % parameters obtained from the HRV
     %
-    % time_stat_analysis(file_appendix) 
+    % statistical_analysis(domain, file_appendix) 
     %
     % void function, the results are provided via an .xls file
     %
+    % domain: string containing the domain to perform statistical analysis
+    % on. Can be 'time' or 'frequency'
     % file_appendix: string containing the appendix for the output .xls
     % file
 
     % read the parameters file built in main
+    
+    if strcmp(domain, 'time')
+        params_file = 'time_parameters';
+        filename = 'time_analysis';
+    else
+        params_file = 'frequency_parameters';
+        filename = 'frequency_analysis';
+    end
 
-    params = readtable(strcat('time_parameters', file_appendix));
+    params = readtable(strcat(params_file, file_appendix));
     active = params{:,"Active"}==1;
     quiet = params{:, "Active"}==0;
     variables = params.Properties.VariableNames;
 
     % delete file with same name
     
-    filename = strcat('time_analysis', file_appendix, '.xls');
+    filename = strcat(filename, file_appendix, '.xls');
     if exist(filename, 'file')==2
     delete(filename);
     end

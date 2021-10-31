@@ -160,12 +160,12 @@ if strcmp(response, 'Yes')
 	'Statistical Analysis', ...
 	'Both', 'Time-domain only', 'Frequency-domain only', 'Both');
     if strcmp(response, 'Frequency-domain only')
-        freq_stat_analysis(filename_appendix);
+        statistical_analysis('frequency' ,filename_appendix);
     elseif strcmp(response, 'Time-domain only')
-        time_stat_analysis(filename_appendix);
+        statistical_analysis('time' ,filename_appendix);
     else
-        freq_stat_analysis(filename_appendix);
-        time_stat_analysis(filename_appendix);
+        statistical_analysis('frequency' ,filename_appendix);
+        statistical_analysis('time' ,filename_appendix);
     end
 end
 
