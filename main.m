@@ -167,7 +167,13 @@ if strcmp(response, 'Yes')
         statistical_analysis('frequency' ,filename_appendix);
         statistical_analysis('time' ,filename_appendix);
     end
+    
+    [icondata,iconcmap] = imread('ecg-icon.png'); 
+    h=msgbox({'You can find the .xls files with the '; 'results in the working directory'},...
+         'Statistical Analysis','custom',icondata,gray);
 end
+
+
 
 
 

@@ -6,6 +6,7 @@
 *.asv
 *.jpg
 *.png
+!ecg-icon.png
 *.bmp
 *.xls
 !frequency_parameters_comparison.xls
