@@ -24,3 +24,8 @@
 - Some Dialogue Boxes will guide you during the execution. 
 - After the execution, you will find two _.xls_ files (one for time domain and one for frequency domain) in the working directory with all the calculated parameters for each subject selected. 
 - If statistical analysis is requested, two additional _.xls_ files are generated. These files will contain all the statistical indexes and tests computed on the parameters of the first two _.xls_ files.
+
+## Report
+
+- A 2-pages report is provided to explain the choices made during the implementation and the observations about the results obtained.
+

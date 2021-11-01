@@ -2,6 +2,7 @@
 *.pptx
 *.pdf
 !/papers/*.pdf
+!report.pdf
 *.txt
 *.asv
 *.jpg
