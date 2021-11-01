@@ -39,7 +39,11 @@ function statistical_analysis(domain, file_appendix)
     writecell({'AS'}, filename, Range='J1');
     writecell({'Mean', 'SD', 'Median', 'IQR', strcat('N(',char(956),',',char(955),'^2',')')}, filename, Range='B2');
     writecell({'Mean', 'SD', 'Median', 'IQR', strcat('N(',char(956),',',char(955),'^2',')')}, filename, Range='H2');
-    writecell(variables(2:end)', filename, Range='A3:A9');
+    if strcmp(domain, 'time')
+        writecell(variables(2:end)', filename, Range='A3:A9');
+    else
+        writecell(variables(2:end)', filename, Range='A3:A14');
+    end
     writecell({'p.Value'}, filename, Range='N2');
     writecell({'MWW/ttest'}, filename, Range='O2');
     
