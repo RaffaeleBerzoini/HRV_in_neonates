@@ -7,11 +7,18 @@
 
 
 
-## Setup and execution
+## Setup 
+
+- Open a command prompt and execute:
+    ```console
+    git clone https://github.com/RaffaeleBerzoini/HRV_in_neonates.git
+    ```
+
+## Execution
 
 - Once the project has been downloaded, head into the project working directory and execute on the Matlab command prompt: 
     ```shell
-    > main.m
+    >> main
     ```
     
 - Some Dialogue Boxes will guide you during the execution. 
