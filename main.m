@@ -105,15 +105,16 @@ for subject = subjects
         plot(t, ecg); hold on; plot((r_peaks)/f_s, ecg(r_peaks),'ok'); title(strcat(state,' -',' R-peaks extraction'), 'Interpreter', 'none'); ylabel('Amplitude [mV]'); xlabel('Time [s]'); 
         linkaxes;
     
-        % Tachogram
+        % Ectopic beats correction
         
         RRintervals = time_intervals(r_peaks, f_s);
-        
-        % Ectopic beats correction
+
         if subject==3 || subject==4
             threshold = 0.78;
             [r_peaks, RRintervals] = RRinterval_correction(RRintervals, r_peaks, threshold);
         end
+
+        % Tachogram
 
         [x, y] = tachogram(RRintervals);
 
