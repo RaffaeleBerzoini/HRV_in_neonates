@@ -1,4 +1,4 @@
-# HRV in nenoates for  2021/2022 Biomedical Signal Processing course
+# HRV in neonates for  2021/2022 Biomedical Signal Processing course
 
 
 - ###  Raffaele Berzoini  ([@RaffaeleBerzoini](https://github.com/RaffaeleBerzoini)) <br> raffaele.berzoini@mail.polimi.it
